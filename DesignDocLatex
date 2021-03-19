@@ -1,0 +1,198 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{setspace}
+\usepackage{minted}
+\setlength\parindent{24pt}
+\usepackage{indentfirst}
+\usepackage{graphicx}
+
+\doublespacing
+
+\pagestyle{empty}
+\begin{document}
+    \begin{center}
+        \huge{CAN Data Generation} \\
+        \Large{Lewis Koplon, Fernando Gutierrez. William Lund} \\
+        \Large{Emails: lewisk1899@email.arizona.edu, afgutierrez8@email.arizona.edu, wmund@email.arizona.edu } \\
+        \Large{ECE 473 Software Engineering Concepts Spring ‘21} \\
+        \Large{March 5, 2021} \\
+    \end{center}
+    \newpage
+    
+
+    \noindent
+    
+    \section{Executive Summary: }
+	A Controller Area Network (CAN) allows for devices to communicate with other devices’ applications without the need for a central host computer. This application is used in all vehicles used today and through a wide variety of other applications. The goal of this project is to develop an efficient software that will utilize DBC rules to provide the user with humanly readable CAN data given a rosbag file containing sensor data from a vehicle. Tools such as CAT Vehicle Simulator and CANTools Python library will provide us with useful features that can help us collect and present CAN data in various ways. 
+    \newpage
+    
+    \tableofcontents
+    \newpage
+    \pagestyle{plain}
+    \setcounter{page}{1}
+    
+    
+    \section{Project Overview:}
+Controller Area Network (CAN) “is one of the most dominating bus protocols” that has been created for in-vehicle networks. This was due to the fact that they were able to greatly reduce wiring, weight, and cost while still using more electronics in vehicles. CAN buses can be found in a wide variety of applications from the vehicles that we see on the road every day, to streetcars, trains, and even aircraft control systems. CAN devices are able to transmit messages to one another through a network in packets called frames. These frames contain streams of bits which we can extract to gain useful information about the system we are using such as how our engine is performing. Further analysis into our project will determine how we can use these data fields to convert into a humanly readable format, using standard DBC rules. 
+\newpage
+
+\section{Requirements:}
+\subsection{Application/Functional Requirements:}
+\subsubsection{Overview:}
+This section will discuss the requirements that the program will have to meet. There is class B that will represent the minimum requirements that would still produce an effective program, and there is class A which specifies quality of life improvements for the user. These requirements are subject to change over the term as the project progresses.
+\subsubsection{‘B’ requirements:}
+Class B: The program will be coded in python as to utilize the CANtool python library. We will be taking data from sensors and converting it into raw CAN data in the form of the CAN bus. The raw CAN data can be converted into readable data by utilizing a DBC file. DBC files are used to translate raw CAN data. We will be utilizing the ”acura ilx 2016 can generated.dbc” to encode our sensor data. We will develop a command line tool that takes a rosbag file, which would be read using bagpy, and outputs a text file filled with CAN data organized by time the message was sent. The sensor data that will be converted to CAN, will be the ones that are useful to autonomous navigation.
+\subsubsection{‘A’ requirements:}
+Class A: Class A will include all the requirements from Class B, however the signals from the lane keeping assistance will be processed as well as the cruise controller, in which a scenario will be developed in gazebo. There will be no memory leaks. 
+
+\section{Application Analysis:}
+\subsection{Overview:}
+The scope of this class will allow us to focus on signals that are especially useful in navigation control, specifically within autonomous vehicles. DBC files contain rules for encoding and decoding raw CAN data streams, which we can then use to extract relevant information from the bits. Each CAN message in a DBC file contains a unique identifier, name, bit length, as well as a variable number of signals. The DBC provides details on how to decode each of the signals. This means that we will have to match each CAN identifier to its corresponding set of rules in the DBC file. For 11-bit identifiers, we can look them up directly in the DBC. For 29-bit identifiers, we will need to do some bit-masking in order to correctly match to the corresponding 32-bit identifier in the DBC file.
+\subsection{State Model:}
+\subsubsection{State Model According to Class 'B':}
+ \begin{figure}[!htp]
+        \center{\includegraphics[scale = .75]{bclass}
+        \caption{\label{fig:my-label} Class 'B' State Model}}
+ \end{figure}
+    \newpage
+This state diagram will take the ROSbag file, and create an array of csv files, which will be parsed and encoded. A list of lists will be passed to an object called toFile(), this will create text files out of each respective sensor's converted data and append it to a file.
+
+\subsubsection{State Model According to Class 'A':}
+ \begin{figure}[!htp]
+        \center{\includegraphics[scale = .38]{aclass}
+        \caption{\label{fig:my-label} Class 'A' State Model}}
+ \end{figure}
+ Same explanation as figure 2, however there will not be an interface for the user to utilize. The converter state will take a rosbag file from the Gazebo simulation, including two more signals to fulfill the lane keeping assist and cruise control for the cat vehicle.
+    \newpage
+\section{Domain Analysis:}
+\subsection{Overview: }
+		This section will provide a brief overview on ROS messages and how 
+our software will be interacting with these messages. The ROS messages that we will be interacting with in our software will be messages containing relevant CAN data. This section will also provide interaction models pertaining to our system. 
+\subsection{ROS Messages}
+ROS messages are simple data structures that are made up of typed fields and can also include primitive data types as well as arrays of primitive types. Nodes are able to communicate with other other nodes by publishing messages on topics. ROS messages can also be found in ROSbag files. These rosbag files can be created by subscribing to the topics that the nodes publish to and storing the collected data in an efficient file. Our software will utilize rosbags containing relevant information (CAN data) to make full use of the tools offered within ROS. 
+\subsection{Use Cases:}
+Case - User inputs rosbag file
+Description - The user will input a rosbag file and pass it as an argument into our program. The program will read the rosbag file and the file will be decoded using CANTools python library. Using the selected dbc file and following the specified rules to decode the CAN data, we will be able to output a .txt file that presents the CAN data in a user friendly format. 
+Exceptions - file that user provides does not follow proper encoding, encoding does not match dbc file and generates error
+
+\section{Important Algorithms:}
+\subsection{Overview:}
+The format of a CAN message is as follows.
+ \begin{figure}[!htp]
+        \center{\includegraphics[scale = .45]{can_format}
+        \caption{\label{fig:my-label} CAN Data}}
+ \end{figure}
+    \newpage
+ We will be using the packages and tools discussed below to convert the data from our rosbag file into this format.
+    
+CANtools is a CAN Bus Python library that allows for a user to parse DBC files, encode/decode CAN messages, and monitor a CAN Bus, along with many other useful operations. For the purpose of this project, we will utilize CANtools mainly for parsing the dbc file and encoding/decoding the data we gather from our simulator using another python package, bagpy. Bagpy is another Python library that facilitates the reading of a rosbag file. This will be especially useful to us in properly reading the raw rosbag file and extracting valuable information that we are going to convert to CAN messages. The following sections will detail our approach to convert raw data from a rosbag file to CAN data.
+
+\subsection{Python Bagpy:}
+	We will use bagpy to read the data from our rosbag file in order to then convert it to CAN data. Below is example code for generating a .csv file full of messages on a rostopic.
+     \begin{figure}[!htp]
+        \center{\includegraphics[scale = .38]{bagpyex}
+        \caption{\label{fig:my-label}CSV file given by utilizing CanTools library}}
+ \end{figure}
+    \newpage
+\subsection{Python CANTools Library:}
+	We will be using the cantools python library to encode and decode our CANdata with our chosen .dbc file. We will first use this tool to parse the dbc file into its available messages and signals. The following prints the signal within an example message.
+   \begin{minted}{python}
+    import cantools
+    import can
+    from pprint import pprint
+    db = cantools.database.load_file('motohawk.dbc')
+    db.messages
+    example_message = db.get_message_by_name('ExampleMessage')
+    pprint(example_message.signals)
+   \end{minted}
+    Our software will then use this package to encode a data entry, for a chosen signal from our bagpy csv file, into the final CAN message.
+    \begin{minted}{python}
+    data = example_message.encode({'Temperature': 250.1, 'AverageRadius': 3.2, 'Enable': 1})
+    message = can.Message(arbitration_id=example_message.frame_id, data=data)
+    pprint(message)
+   \end{minted}
+    Then finally for testing purposes we can utilize this tool to decode the message back into its original form.
+    \begin{minted}{python}
+    final = db.decode_message(message.arbitration_id, message.data)
+    pprint(final)
+   \end{minted}
+\section{Class Design:}
+\subsection{Overview:}
+The classes in the project are the same as our states shown in figure 2. We have a converter class which is responsible for taking our ROSbag file and converting all the data into their respective csv files partitioned based on the signal;. Next we have our parser which will go through each csv and encode the raw sensor data to the CAN message format, this will be done using CANtools. The class toFile will be responsible for taking the CANmessages and outputting them to their own respective files once again based on the signal.
+\subsection{Class Diagrams:}
+\begin{figure}[!htp]
+        \center{\includegraphics[]{uml}
+        \caption{\label{fig:my-label} Class Diagram}}
+\end{figure}
+ 
+ \begin{figure}[!htp]
+        \center{\includegraphics[scale = .45]{uml2}
+        \caption{\label{fig:my-label} Class Diagram}}
+ \end{figure}
+    \newpage
+\section{Testing Strategy:}
+	Our testing strategy will involve decoding the CAN data we generate and comparing it to the input data. Our goal is to ensure that the output data matches the input data, meaning nothing is lost during encoding and decoding. We will do this for every type of message, starting simply with velocity on the topic /vel. Anytime we implement a new signal type, we will go through the testing procedure.
+\section{Integration with Platform:}
+ The use of any sensors will be limited to the sensors in the CAT Vehicle Simulator. These sensors will be used to generate data regarding a nonspecific vehicle for simplicity’s sake. We can monitor and extract relevant data that we obtain from the CAT Vehicle Simulator. The CAT Vehicle Simulator also provides us with other data regarding camera and Lidar features. 
+\section{Task allocation with Breakdown:}
+\subsection{‘B’ requirement task allocation: }
+
+\noindent Lewis
+\begin{itemize}
+\item Read in input file containing sensor data from user
+\item Convert sensor data from file into raw CAN data in the form of the CAN bus
+\end{itemize}
+
+\noindent Will
+\begin{itemize}
+\item Convert ROSbag files into CSV
+\item Match CAN identifiers to respective set of rules from DBC file
+
+\end{itemize}
+
+\noindent Fernando
+\begin{itemize}
+\item Encode raw CAN using the matched rules 
+\item Produce output file containing readable information from encoded CAN data
+
+\end{itemize}
+
+\subsection{‘A’ requirement task allocation: }
+
+\noindent Lewis
+\begin{itemize}
+\item Develop scenario in Gazebo to extract data from sensors 
+
+\end{itemize}
+
+\noindent Will
+\begin{itemize}
+\item Process cruise control signals from generated gazebo scenario
+\end{itemize}
+
+\noindent Fernando
+\begin{itemize}
+\item Process lane keeping assistance signals from generated gazebo scenario
+
+\end{itemize}
+
+\section{Timeline for Completion:}
+\begin{itemize}
+\item March 10th: Converting All ROSbag files into CSV using bagpy
+\item March 16th: Converting data in CAN bus message form
+\item March 19th: Updated Project Design Document due by 5:00 pm 
+\item March 20th: Output CAN data to a text file
+\item April 2nd: Alpha Release due by 5:00 pm
+\item April 9th: Requirements Verification due 
+\item April 23rd: Beta Release due by 5:00 pm 
+\item April 30th: Initial Online Documentation due 
+\item May 3rd-5th: Project Presentations
+\item May 5th: Final Release due by 5:00 pm
+\end{itemize}
+
+
+
+
+
+\end{document}
+
