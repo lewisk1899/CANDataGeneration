@@ -10,6 +10,7 @@ Data from the lasers will be used in the next implementation for LKA messages.
 Installation guide:
 
 1) Install dependencies:
+
         pip3 install bagpy
         pip3 install cantools
         pip3 install can
@@ -26,11 +27,11 @@ Installation guide:
 
 
 4) Run the software:
-
         For help you can run: 
-            python3 CANrun.py -h
 
+            python3 CANrun.py -h
         Otherwise:
+        
             python3 CANrun.py -i <bag_file_name>
 
 
