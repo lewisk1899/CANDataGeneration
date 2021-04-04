@@ -40,3 +40,5 @@ Note) For help you can run:
 Your outputs are in a directory called "outputs" as multiple .txt files sorted by message type.
 
 These outputs are organized by timestamp, with each field of the CAN message labeled as well.
+
+Additionally, if you use the test.bag file, know that it was generated from a car sitting perfectly still, meaning the velocity will not be populated.
