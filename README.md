@@ -16,6 +16,7 @@ Installation guide:
 
 
 2) Clone repository into home directory and select correct branch:
+
         git clone https://github.com/lewisk1899/CANDataGeneration
         cd CANDataGeneration
         git checkout origin/new_branch
@@ -25,6 +26,7 @@ Installation guide:
 
 
 4) Run the software:
+
         For help you can run: 
             python3 CANrun.py -h
 
