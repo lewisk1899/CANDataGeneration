@@ -27,12 +27,12 @@ Installation guide:
 
 
 4) Run the software:
-        For help you can run: 
 
-            python3 CANrun.py -h
-        Otherwise:
-        
-            python3 CANrun.py -i <bag_file_name>
+        python3 CANrun.py -i <bag_file_name>
+
+Note) For help you can run:
+
+        python3 CANrun.py -h
 
 
 
