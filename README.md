@@ -20,7 +20,7 @@ Installation guide:
 
         git clone https://github.com/lewisk1899/CANDataGeneration
         cd CANDataGeneration
-        git checkout origin/new_branch
+        git checkout origin/beta_branch
 
 
 3) Move desired .bag file into the CANDataGeneration directory with python files
