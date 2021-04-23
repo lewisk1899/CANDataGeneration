@@ -11,8 +11,8 @@ class CANrun:
         self.generator = CSVGenerator(self.input_bag_file)
         self.generator.run()
 
-# def main():
-#     CANrun("2021-03-05-14-21-09.bag")
+#def main():
+    #CANrun("test2.bag")
 
 def main(argv):
     input_file = ''
@@ -42,4 +42,4 @@ def main(argv):
 
 main(sys.argv[1:])
 
-# main()
+#main()
