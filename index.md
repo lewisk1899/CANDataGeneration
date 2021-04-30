@@ -1,10 +1,4 @@
-## Welcome to GitHub Pages
-
-You can use the [editor on GitHub](https://github.com/lewisk1899/CANDataGeneration/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
-
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
-
-### Markdown
+Syntax highlighted code block
 
 # Header 1
 ## Header 2
@@ -45,3 +39,21 @@ Data from the lasers will be used in the next implementation for LKA messages.
 
         python3 CANrun.py -h
 
+
+
+
+Your outputs are in a directory called "outputs" as multiple .txt files sorted by message type.
+
+These outputs are organized by timestamp, with each field of the CAN message labeled as well.
+
+Additionally, if you use the test.bag file, know that it was generated from a car sitting perfectly still, meaning the velocity will not be populated.
+
+- Bulleted
+- List
+
+1. Numbered
+2. List
+
+**Bold** and _Italic_ and `Code` text
+
+[Link](url) and ![Image](src)
