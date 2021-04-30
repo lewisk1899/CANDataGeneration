@@ -22,7 +22,7 @@ In this current implementation, the generated messages are for velocity, steerin
         git checkout origin/beta_branch
 
 
-## Example for running the software
+## Tutorial: Example for running the software
 
  First Move desired .bag file into the CANDataGeneration directory with python files
 
