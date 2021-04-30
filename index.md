@@ -1,6 +1,6 @@
 # Documentation
 
-## About
+## About the Software
 This software will take your .bag rosbag file (from rosbag record) and output some of that data as CAN messages to multiple text files. 
 These messages are generated from the toyota_rav4_2019.dbc.
 
@@ -22,10 +22,12 @@ In this current implementation, the generated messages are for velocity, steerin
         git checkout origin/beta_branch
 
 
-### 3) Move desired .bag file into the CANDataGeneration directory with python files
+## Example for running the software
+
+ First Move desired .bag file into the CANDataGeneration directory with python files
 
 
-### 4) Run the software:
+### 1) Run the software:
 
         python3 CANrun.py -i <bag_file_name>
 
@@ -41,13 +43,3 @@ Your outputs are in a directory called "outputs" as multiple .txt files sorted b
 These outputs are organized by timestamp, with each field of the CAN message labeled as well.
 
 Additionally, if you use the test.bag file, know that it was generated from a car sitting perfectly still, meaning the velocity will not be populated.
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
