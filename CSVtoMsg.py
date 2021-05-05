@@ -2,6 +2,7 @@ import csv
 import cantools
 import can
 import os
+import shutil
 import math
 
 from can import Message
@@ -17,6 +18,12 @@ class CSVtoMsg:
         # here we are appending all file names into our self.files attribute using the os library
         # name .bag change this to account for the output of wills code, a new directory should be created named after the bag file
         # bag_name.replace(".bag", "") # remove .bag
+        # remove output folder and all files inside of it
+        try:
+            shutil.rmtree(os.getcwd() + "/Outputs/")
+        except OSError as e:
+            print("Error: %s : %s" % (os.getcwd() + "/Outputs/", e.strerror))
+
         print(os.getcwd() + "/" + bag_name)
         for file_name in os.listdir(os.getcwd() + "/" + bag_name):  # get directory
             if file_name.endswith(".csv"):  # if the file we are looking at append to self.files
@@ -37,6 +44,7 @@ class CSVtoMsg:
 
     def read_file(self, csv_file, message_type):
         msgs = []
+        lka_msg = []
         csv_reader = csv.reader(csv_file, delimiter=',')  # specify the delimiter and its respective csv
         line_count = 0  # line count to keep track of where we are
         for row in csv_reader:  # go through row by row
@@ -69,6 +77,8 @@ class CSVtoMsg:
                     msgs.append((self.data_to_dbc_right_laser_three(row, top_line), "TRACK_A_12"))
                     msgs.append((self.data_to_dbc_right_laser_four(row, top_line), "TRACK_A_13"))
                     msgs.append((self.data_to_dbc_right_laser_five(row, top_line), "TRACK_A_14"))
+                    # lka needs lasers
+                    msgs.append((self.data_to_dbc_laser_dst_check(row, top_line), "TOO_CLOSE_ALERT"))
 
             line_count += 1
 
@@ -117,6 +127,55 @@ class CSVtoMsg:
             return "LASER"
         else:
             return None
+
+    def data_to_dbc_laser_dst_check(self, csv_line, info_line):
+        indexes = (info_line.index("ranges_179"), info_line.index("ranges_178"), info_line.index("ranges_177"), info_line.index("ranges_176"), info_line.index("ranges_175"),
+                  info_line.index("ranges_88"), info_line.index("ranges_89"), info_line.index("ranges_90"), info_line.index("ranges_91"), info_line.index("ranges_92"),
+                  info_line.index("ranges_0"), info_line.index("ranges_1"), info_line.index("ranges_2"), info_line.index("ranges_3"), info_line.index("ranges_4")) # all laser positions in csv
+
+        left_index = (info_line.index("ranges_179"), info_line.index("ranges_178"), info_line.index("ranges_177"), info_line.index("ranges_176"), info_line.index("ranges_175"))
+        right_index = (info_line.index("ranges_88"), info_line.index("ranges_89"), info_line.index("ranges_90"), info_line.index("ranges_91"), info_line.index("ranges_92"))
+        mid_index = (info_line.index("ranges_88"), info_line.index("ranges_89"), info_line.index("ranges_90"), info_line.index("ranges_91"), info_line.index("ranges_92"))
+
+        # bin_left = 4 # 100
+        # bin_mid = 2 # 010
+        # bin_right = 1 # 001
+        # bin_all = 7 # 111
+        # bin_left_right = 5 # 101
+        # bin_left_mid = 6 # 110
+        # bin_right_mid = 3 # 011
+
+        too_close_indexes = []
+        dst = 0
+
+        for index in indexes:
+            if(csv_line[index] != "inf" and int(math.floor(float(csv_line[index]))) < 2): # value is less than two, which is close enough to set off our alert to create a msg
+                # mark down the index and move on, msgs will be created later
+                too_close_indexes.append(index)
+        # figure out what combination of lasers it is
+        binary_direction_indicator = 0
+        left_accounted = 0
+        right_accounted = 0
+        mid_accounted = 0
+        # showing directionality of which lasers are triggered through binary
+        for index in too_close_indexes:
+            if(index in left_index and left_accounted == 0):
+                binary_direction_indicator += 100
+                left_accounted = 1
+            elif(index in mid_index and mid_accounted == 0):
+                binary_direction_indicator += 10
+                mid_accounted = 1
+            elif(index in right_index and right_accounted == 0):
+                binary_direction_indicator += 1
+                right_accounted = 1
+
+        bin_CAN = int(str(binary_direction_indicator), 2)
+
+        # create the message
+        msg_type = self.db.get_message_by_name("LASER_DST_CHECK")  # get message by name
+        data = msg_type.encode({'LOCATION': bin_CAN})  # encode message with data
+        msg: Message = can.Message(timestamp=float(csv_line[0]), arbitration_id=msg_type.frame_id, data=data)
+        return msg
 
     # message type is speed, so we must convert with speed
     def data_to_dbc_speed(self, csv_line):

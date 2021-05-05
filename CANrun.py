@@ -12,7 +12,7 @@ class CANrun:
         self.generator.run()
 
 #def main():
-    #CANrun("test2.bag")
+    #CANrun("test3.bag")
 
 def main(argv):
     input_file = ''
