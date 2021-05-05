@@ -1,0 +1,29 @@
+Metadata-Version: 2.1
+Name: ytsphinx
+Version: 1.2.1.dev20200430
+Summary: Sphinx "youtube" extension
+Home-page: https://github.com/rahulbhadani/ytsphinx
+Author: Chris Pickel
+Author-email: sfiera@gmail.com
+Maintainer: Rahul Bhadani
+Maintainer-email: rahulbhadani@email.arizona.edu
+License: BSD
+Platform: any
+Classifier: Development Status :: 4 - Beta
+Classifier: Environment :: Console
+Classifier: Environment :: Web Environment
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: BSD License
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python
+Classifier: Topic :: Documentation
+Classifier: Topic :: Utilities
+Requires-Dist: Sphinx (>=0.6)
+
+
+This package contains the youtube Sphinx extension.
+
+The extension defines a directive, "youtube", for embedding YouTube
+videos.
+
+
