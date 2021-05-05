@@ -18,11 +18,11 @@ Installation guide:
 2) Clone repository into home directory and select correct branch:
 
         git clone https://github.com/lewisk1899/CANDataGeneration
-        cd CAN
+        cd CANDataGeneration
         git checkout origin/main
 
 
-3) Move desired .bag file into the CAN directory with python files
+3) Move desired .bag file into the CAN directory (which is inside the CANDataGeneration folder) with python files
 
 
 4) Run the software:
