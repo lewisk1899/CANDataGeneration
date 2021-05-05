@@ -18,7 +18,7 @@ Installation guide:
 2) Clone repository into home directory and select correct branch:
 
         git clone https://github.com/lewisk1899/CANDataGeneration
-        cd CANDataGeneration
+        cd CAN
         git checkout origin/main
 
 
