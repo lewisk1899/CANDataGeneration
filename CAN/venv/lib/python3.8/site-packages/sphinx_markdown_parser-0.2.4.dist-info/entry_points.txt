@@ -1,0 +1,8 @@
+[console_scripts]
+cm2html = sphinx_markdown_parser.scripts:cm2html
+cm2latex = sphinx_markdown_parser.scripts:cm2latex
+cm2man = sphinx_markdown_parser.scripts:cm2man
+cm2pseudoxml = sphinx_markdown_parser.scripts:cm2pseudoxml
+cm2xetex = sphinx_markdown_parser.scripts:cm2xetex
+cm2xml = sphinx_markdown_parser.scripts:cm2xml
+
