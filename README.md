@@ -4,8 +4,7 @@ ECE 473 Lewis Koplon, Fernando Gutierrez, Will Mund
 This software will take your .bag rosbag file (from rosbag record) and output some of that data as CAN messages to multiple text files. 
 These messages are generated from the toyota_rav4_2019.dbc.
 
-In this current implementation, the generated messages are for velocity and steering data only.
-Data from the lasers will be used in the next implementation for LKA messages.
+In this final implementation, the generated messages are for velocity data, steering data, laser data, and a custom signal we implemented to track if an object is too close the vehicle via the lasers.
 
 Installation guide:
 
@@ -20,19 +19,19 @@ Installation guide:
 
         git clone https://github.com/lewisk1899/CANDataGeneration
         cd CANDataGeneration
-        git checkout origin/new_branch
+        git checkout origin/main
 
 
-3) Move desired .bag file into the CANDataGeneration directory with python files
+3) Move desired .bag file into the CANDataGeneration directory (which is inside the CAN folder) with python files
 
 
 4) Run the software:
 
-        python CANrun.py -i <bag_file_name>
+        python3 CANrun.py -i <bag_file_name>
 
 Note) For help you can run:
 
-        python CANrun.py -h
+        python3 CANrun.py -h
 
 
 
