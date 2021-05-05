@@ -36,7 +36,7 @@ Note) For help you can run:
 
 
 
-Your outputs are in a directory called "outputs" as multiple .txt files sorted by message type.
+Your outputs are in a directory called "outputs" as multiple .txt files sorted by message type. Steering data is contained in the kinematics file, velocity in the speed file, and laser data in the laser file.
 
 These outputs are organized by timestamp, with each field of the CAN message labeled as well.
 
