@@ -22,7 +22,7 @@ Installation guide:
         git checkout origin/main
 
 
-3) Move desired .bag file into the CANDataGeneration directory (which is inside the CAN folder) with python files
+3) Move desired .bag file into the CAN directory with python files
 
 
 4) Run the software:
